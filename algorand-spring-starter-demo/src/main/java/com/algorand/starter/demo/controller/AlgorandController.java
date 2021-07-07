@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+
 
 @RestController
 public class AlgorandController {
@@ -42,5 +44,10 @@ public class AlgorandController {
     @GetMapping(path="/assetSearch", produces = "application/json; charset=UTF-8")
     public String assetSearch(@RequestParam String assetName) throws Exception {
         return indexer.searchForAssets().name(assetName).limit(1L).execute(headers, values).toString();
+    }
+
+    @GetMapping(path = "/accountTransactionsBefore", produces = "application/json; charset=UTF-8")
+    public String accountTransactionsBeforeDate(@RequestParam Date date) throws Exception {
+        return indexer.lookupAccountTransactions(account.getAddress()).beforeTime(date).limit(1L).execute(headers, values).toString();
     }
 }
