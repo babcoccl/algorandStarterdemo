@@ -3,6 +3,7 @@ package com.algorand.starter.demo.controller;
 import com.algorand.algosdk.account.Account;
 import com.algorand.algosdk.algod.client.api.AlgodApi;
 import com.algorand.algosdk.v2.client.common.AlgodClient;
+import com.algorand.algosdk.v2.client.common.IndexerClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,8 @@ public class AlgorandController {
     private Account account;
     @Autowired
     private AlgodClient client;
+    @Autowired
+    private IndexerClient indexer;
 
     private AlgodApi api;
     String[] headers = {"X-API-Key"};
@@ -29,5 +32,15 @@ public class AlgorandController {
     @GetMapping(path="/asset", produces = "application/json; charset=UTF-8")
     public String asset(@RequestParam Long assetId) throws Exception {
         return client.GetAssetByID(assetId).execute(headers, values).body().toString();
+    }
+
+    @GetMapping(path="/pendingTransactions", produces = "application/json; charset=UTF-8")
+    public String pendingTransactions() throws Exception {
+        return client.GetPendingTransactionsByAddress(account.getAddress()).execute(headers, values).toString();
+    }
+
+    @GetMapping(path="/assetSearch", produces = "application/json; charset=UTF-8")
+    public String assetSearch(@RequestParam String assetName) throws Exception {
+        return indexer.searchForAssets().name(assetName).limit(1L).execute(headers, values).toString();
     }
 }
