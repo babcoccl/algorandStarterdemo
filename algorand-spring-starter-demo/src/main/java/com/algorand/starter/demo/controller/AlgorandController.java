@@ -47,10 +47,8 @@ public class AlgorandController {
         List<Asset> createdAssets =
                 client.AccountInformation(account.getAddress()).execute(headers, values).body().createdAssets;
         for (Asset asset : createdAssets) {
-            System.out.println(asset.params.name);
             if(asset.params.name.equals(assetName)){
              returnAsset = asset;
-
             }
         }
         return returnAsset.toString();
